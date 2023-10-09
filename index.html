@@ -1,0 +1,129 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <style> body { margin: 0; } </style>
+
+  <script src="./globe.gl_example_random-rings__files/globe.gl"></script><style type="text/css">.scene-container .clickable {
+  cursor: pointer;
+}</style><style type="text/css">.scene-nav-info {
+  bottom: 5px;
+  width: 100%;
+  text-align: center;
+  color: slategrey;
+  opacity: 0.7;
+  font-size: 10px;
+}
+
+.scene-tooltip {
+  top: 0;
+  color: lavender;
+  font-size: 15px;
+}
+
+.scene-nav-info, .scene-tooltip {
+  position: absolute;
+  font-family: sans-serif;
+  pointer-events: none;
+  user-select: none;
+}
+
+.scene-container canvas:focus {
+  outline: none;
+}</style>
+<!--  <script src="../../dist/globe.gl.js"></script>-->
+</head>
+
+<body>
+  <div id="globeViz"><div style="position: relative;"><div><div class="scene-container" style="position: relative;"><div class="scene-nav-info" style="display: none;">Left-click: rotate, Mouse-wheel/middle-click: zoom, Right-click: pan</div><div class="scene-tooltip" style="top: 799.566px; left: 1614.01px; transform: translate(-63.0472%, 21px);"></div><canvas data-engine="three.js r157" width="2560" height="1323" style="display: block; touch-action: none; width: 2560px; height: 1323px;"></canvas><div style="overflow: hidden; position: absolute; top: 0px; pointer-events: none; width: 2560px; height: 1323px;"></div></div></div></div></div>
+
+  <script>
+    const gData = [{
+      label: "Water's Edge Beach",
+      status: "gold",
+      size: 2,
+      lat: -34.194812,
+      lng: 18.448563,
+      maxR: 2,
+      propagationSpeed: 0,
+      repeatPeriod: 60,
+      map_link: "https://maps.app.goo.gl/NCr8bMqpWDChRV6h7"
+    }];
+
+    const colorInterpolator = t => `rgba(255,100,50,${Math.sqrt(1-t)})`;
+
+    const globe = Globe()
+      .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
+      .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
+      .ringsData(gData)
+      .ringColor(() => colorInterpolator)
+      .ringMaxRadius('maxR')
+      .ringPropagationSpeed('propagationSpeed')
+      .ringRepeatPeriod('repeatPeriod')
+      .labelsData(gData)
+      .labelText('label')
+      .labelSize(1)
+      .labelDotRadius(0.5)
+      .labelColor(() => 'rgba(255, 165, 0, 0.75)')
+      .labelResolution(2)
+      .htmlElementsData(gData)
+      .htmlElement(d => {
+        const el = document.createElement('div');
+        // el.innerHTML = markerSvg;
+        el.style.color = d.status;
+        el.style.width = `${d.size}px`;
+
+        el.style['pointer-events'] = 'auto';
+        el.style.cursor = 'pointer';
+        el.onclick = () => console.info(d);
+        return el;
+      })
+      (document.getElementById('globeViz'));
+  </script>
+</body></html>
+
+<!-- 
+  fetch('../datasets/ne_110m_populated_places_simple.geojson').then(res => res.json()).then(places => {
+    Globe()
+      .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
+      .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
+      .labelsData(places.features)
+      .labelLat(d => d.properties.latitude)
+      .labelLng(d => d.properties.longitude)
+      .labelText(d => d.properties.name)
+      .labelSize(d => Math.sqrt(d.properties.pop_max) * 4e-4)
+      .labelDotRadius(d => Math.sqrt(d.properties.pop_max) * 4e-4)
+      .labelColor(() => 'rgba(255, 165, 0, 0.75)')
+      .labelResolution(2)
+    (document.getElementById('globeViz'))
+  });
+
+
+  const markerSvg = `<svg viewBox="-4 0 36 36">
+    <path fill="currentColor" d="M14,0 C21.732,0 28,5.641 28,12.6 C28,23.963 14,36 14,36 C14,36 0,24.064 0,12.6 C0,5.641 6.268,0 14,0 Z"></path>
+    <circle fill="black" cx="14" cy="14" r="7"></circle>
+  </svg>`;
+
+  // Gen random data
+  const N = 30;
+  const gData = [...Array(N).keys()].map(() => ({
+    lat: (Math.random() - 0.5) * 180,
+    lng: (Math.random() - 0.5) * 360,
+    size: 7 + Math.random() * 30,
+    color: ['red', 'white', 'blue', 'green'][Math.round(Math.random() * 3)]
+  }));
+
+  Globe()
+    .globeImageUrl('//unpkg.com/three-globe/example/img/earth-dark.jpg')
+    .htmlElementsData(gData)
+    .htmlElement(d => {
+      const el = document.createElement('div');
+      el.innerHTML = markerSvg;
+      el.style.color = d.color;
+      el.style.width = `${d.size}px`;
+
+      el.style['pointer-events'] = 'auto';
+      el.style.cursor = 'pointer';
+      el.onclick = () => console.info(d);
+      return el;
+    })
+    (document.getElementById('globeViz'));
+
+-->
