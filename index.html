@@ -36,16 +36,19 @@
 
   <script>
     const gData = [{
-      label: "Water's Edge Beach",
-      status: "gold",
-      size: 2,
+      name: "Water's Edge Beach",
       lat: -34.194812,
       lng: 18.448563,
-      maxR: 2,
-      propagationSpeed: 0,
-      repeatPeriod: 60,
+      colour: "gold",
       map_link: "https://maps.app.goo.gl/NCr8bMqpWDChRV6h7"
     }];
+
+    const lData = gData.map(d => Object.assign({}, d));
+
+    const ringMaxR = 2;
+    const ringPropagationSpeed = 1;
+    const ringRepeatPeriod = 700;
+    const ringResolution = 128;
 
     const colorInterpolator = t => `rgba(255,100,50,${Math.sqrt(1-t)})`;
 
@@ -53,29 +56,19 @@
       .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
       .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
       .ringsData(gData)
-      .ringColor(() => colorInterpolator)
-      .ringMaxRadius('maxR')
-      .ringPropagationSpeed('propagationSpeed')
-      .ringRepeatPeriod('repeatPeriod')
-      .labelsData(gData)
-      .labelText('label')
-      .labelSize(1)
-      .labelDotRadius(0.5)
-      .labelColor(() => 'rgba(255, 165, 0, 0.75)')
-      .labelResolution(2)
-      .htmlElementsData(gData)
-      .htmlElement(d => {
-        const el = document.createElement('div');
-        // el.innerHTML = markerSvg;
-        el.style.color = d.status;
-        el.style.width = `${d.size}px`;
-
-        el.style['pointer-events'] = 'auto';
-        el.style.cursor = 'pointer';
-        el.onclick = () => console.info(d);
-        return el;
-      })
+      .ringColor(d => d.colour)
+      .ringMaxRadius(ringMaxR)
+      .ringPropagationSpeed(ringPropagationSpeed)
+      .ringRepeatPeriod(ringRepeatPeriod)
+      .ringResolution(ringResolution)
+      .labelsData(lData)
+      .labelText(d => "")
+      .labelColor(d => d.colour)
+      .labelDotRadius(0.25)
+      .onLabelClick(d => window.open(d.map_link))
+      // .onLabelHover(d => document.createTextNode(d.name))
       (document.getElementById('globeViz'));
+
   </script>
 </body></html>
 
